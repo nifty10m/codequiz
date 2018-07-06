@@ -40,7 +40,7 @@ jobs:
       - run:
           name: Run unit tests
           environment:
-            DATABASE_URL: "postgres://postgres@localhost:5432/postgres?sslmode=disable"
+            DATABASE_URL: "jdbc:postgres://postgres@localhost:5432/postgres?sslmode=disable"
           command: |
             gradle dependencies
 
