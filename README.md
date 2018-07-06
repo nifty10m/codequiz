@@ -11,4 +11,6 @@ The development configuration for this datasource is located in the application-
     SPRING_PROFILES_ACTIVE = dev
 
 # Continuous Integration
+Status for image tags built from `master`:
+<img src="https://circleci.com/gh/nifty10m/codequiz.png"/>
 https://circleci.com/gh/nifty10m/codequiz
