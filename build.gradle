@@ -57,3 +57,7 @@ dependencies {
   testCompile 'org.spockframework:spock-spring:1.1-groovy-2.4'
   testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+bootRun {
+  systemProperty 'spring.profiles.active', System.getProperty('SPRING_PROFILES_ACTIVE', 'dev')
+}

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class  QuestionEntity(
     @Id
     var id: UUID?,
-    @ManyToOne
+    @ManyToOne(optional = false)
     var category: CategoryEntity?,
     var question: String?,
 

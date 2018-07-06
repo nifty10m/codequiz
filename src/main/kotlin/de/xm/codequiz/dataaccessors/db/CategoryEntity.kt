@@ -14,6 +14,7 @@ data class CategoryEntity(
     var createdAt: Instant = Instant.now(),
 
     @OneToMany(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "category_id", nullable = false, insertable = false, updatable = false)
     var questions: List<QuestionEntity>) {
 
     constructor (id: UUID, name: String) : this(id, name, Instant.now(), emptyList())
