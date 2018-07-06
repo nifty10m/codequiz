@@ -54,7 +54,6 @@ jobs:
           command: |
             gradle test
 
-      - store_test_results:
+      - store_artifacts:
           path: ~/repo/build/reports
-
 
