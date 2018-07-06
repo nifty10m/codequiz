@@ -6,12 +6,10 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-      - image: circleci/postgres:9.6.2-alpine
+      - image: camptocamp/postgres:9.6
         environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: mysecretpassword
 
     working_directory: ~/repo
 
@@ -22,8 +20,6 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
@@ -31,20 +27,20 @@ jobs:
           - v1-dependencies-
 
       - run:
-        name: Wait for Postgres to start
-        command: |
-           for i in `seq 1 10`;
-           do
-             nc -z localhost 5432 && echo Success && exit 0
-             echo -n .
-             sleep 1
-           done
-           echo Failed waiting for Postgres && exit 1
+          name: Wait for Postgres to start
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 5432 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for Postgres && exit 1
 
       - run:
           name: Run unit tests
           environment:
-            CONTACTS_DB_URL: "postgres://postgres@localhost:5432/postgres?sslmode=disable"
+            DATABASE_URL: "postgres://postgres@localhost:5432/postgres?sslmode=disable"
           command: |
             gradle dependencies
 
@@ -54,6 +50,8 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: gradle test
+      - run:
+          command: |
+            gradle test
 
 

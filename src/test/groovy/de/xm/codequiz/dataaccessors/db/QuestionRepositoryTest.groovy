@@ -3,6 +3,7 @@ package de.xm.codequiz.dataaccessors.db
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
 @SpringBootTest
@@ -14,6 +15,7 @@ class QuestionRepositoryTest extends Specification {
   @Autowired
   CategoryRepository categoryRepository
 
+  @Transactional
   def "should return a Random Question"() {
     given:
       def categoryJavaScript = categoryRepository.save(new CategoryEntity(UUID.randomUUID(), "JavaScript"))
@@ -23,7 +25,7 @@ class QuestionRepositoryTest extends Specification {
         "true === undefined",
         [
           new AnswerEntity(UUID.randomUUID(), "Ja", false),
-          new AnswerEntity(UUID.randomUUID(), "Nein", true)
+          new AnswerEntity(UUID.randomUUID(), "N¡ein", true)
         ]
       ))
 
