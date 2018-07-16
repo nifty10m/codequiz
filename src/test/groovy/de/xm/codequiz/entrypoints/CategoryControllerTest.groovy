@@ -25,6 +25,7 @@ class CategoryControllerTest extends Specification {
   @Transactional
   def "should return all Category Names"() {
     given:
+      categoryRepository.deleteAll()
       categoryRepository.saveAll([
         new CategoryEntity(UUID.randomUUID(), "JavaScript"),
         new CategoryEntity(UUID.randomUUID(), "Go"),
