@@ -1,0 +1,13 @@
+<section>
+  <form [formGroup]="form" (submit)="submit()">
+    <label for="nickname">Enter your name</label>
+    <input type="text" id="nickname" formControlName="nameCtrl">
+    <label for="category">Choose a language</label>
+    <select name="category"
+            id="category"
+            formControlName="categoryCtrl">
+      <option *ngFor="let category of categories$ | async" value="category">{{ category.name }}</option>
+    </select>
+    <button type="submit">Let's Go!</button>
+  </form>
+</section>
