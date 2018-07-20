@@ -1,3 +1,4 @@
+import { Answer } from '../models/answer';
 import { Category } from '../models/category';
 
 export class StartGame {
@@ -5,6 +6,17 @@ export class StartGame {
 
     constructor(public payload: { nickname: string; category: Category }) {
     }
+}
+
+export class AnswerQuestion {
+    static readonly type = '[Quiz] Answer question';
+
+    constructor(public payload: Answer) {
+    }
+}
+
+export class EndGame {
+    static readonly type = '[Quiz] End game';
 }
 
 export class FetchCategories {

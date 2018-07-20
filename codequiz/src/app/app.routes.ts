@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { IntroComponent } from './containers/intro/intro.component';
 import { QuestionLayoutComponent } from './containers/question-layout/question-layout.component';
-import { CategoryService } from './services/category.service';
-import { QuestionService } from './services/question.service';
+import { CategoryResolver } from './services/category.service';
+import { QuestionResolver } from './services/question-resolver.service';
 
 export const APP_ROUTES: Routes = [
     {
@@ -10,14 +10,14 @@ export const APP_ROUTES: Routes = [
         pathMatch: 'full',
         component: IntroComponent,
         resolve: {
-            categories: CategoryService,
+            categories: CategoryResolver,
         },
     },
     {
         path: 'quiz',
         component: QuestionLayoutComponent,
         resolve: {
-            questions: QuestionService,
+            questions: QuestionResolver,
         },
     },
 ];

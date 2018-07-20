@@ -1,18 +1,18 @@
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { Answer } from '../models/answer';
 import { Category } from '../models/category';
 import { Question } from '../models/question';
-import { CategoryService } from '../services/category.service';
-import { QuestionService } from '../services/question.service';
-import { FetchCategories, FetchQuestions, StartGame } from './quiz.actions';
+import { ApiService } from '../services/api.service';
+import { AnswerQuestion, EndGame, FetchCategories, FetchQuestions, StartGame } from './quiz.actions';
 
 interface QuizStateModel {
     nickname: string;
     category: Category;
     categories: Category[];
     questions: Question[];
+    question: number;
     givenAnswers: Answer[];
 }
 
@@ -22,19 +22,39 @@ interface QuizStateModel {
         nickname: null,
         category: null,
         categories: [],
+        question: null,
         questions: [],
         givenAnswers: [],
     }
 })
 export class QuizState {
 
-    constructor(private categoryService: CategoryService,
-                private questionService: QuestionService) {
+    @Selector()
+    static currentQuestion(state: QuizStateModel) {
+        return state.questions[state.question];
+    }
+
+    @Selector()
+    static numQuestions(state: QuizStateModel) {
+        return state.questions.length;
+    }
+
+    @Selector()
+    static numAnsweredQuestions(state: QuizStateModel) {
+        return state.givenAnswers.length;
+    }
+
+    @Selector()
+    static numCorrectAnswers(state: QuizStateModel) {
+        return state.givenAnswers.filter(answer => answer.correctAnswer).length;
+    }
+
+    constructor(private api: ApiService) {
     }
 
     @Action(FetchCategories)
     fetchCategories({ patchState }: StateContext<QuizStateModel>) {
-        return this.categoryService.fetchCategories()
+        return this.api.fetchCategories()
             .pipe(
                 tap(categories => patchState({ categories }))
             );
@@ -42,7 +62,7 @@ export class QuizState {
 
     @Action(FetchQuestions)
     fetchQuestions({ patchState }: StateContext<QuizStateModel>, { payload }: FetchQuestions) {
-        return this.questionService.fetchQuestions(payload)
+        return this.api.fetchQuestions(payload)
             .pipe(
                 tap(questions => patchState({ questions }))
             );
@@ -50,9 +70,24 @@ export class QuizState {
 
     @Action(StartGame)
     startGame({ dispatch, patchState }: StateContext<QuizStateModel>, { payload }: StartGame) {
-        patchState({ nickname: payload.nickname, category: payload.category });
-        console.log('starting game');
+        patchState({
+            nickname: payload.nickname,
+            category: payload.category,
+            question: 0,
+        });
         return dispatch(new Navigate(['/quiz']));
+    }
+
+    @Action(AnswerQuestion)
+    answerQuestion({ dispatch, getState, patchState }: StateContext<QuizStateModel>, { payload }: AnswerQuestion) {
+        const { givenAnswers, question, questions } = getState();
+        patchState({
+            givenAnswers: [...givenAnswers, payload],
+            question: question + 1
+        });
+        if (questions.length - 1 === question + 1) {
+            return dispatch(new EndGame());
+        }
     }
 
 }
