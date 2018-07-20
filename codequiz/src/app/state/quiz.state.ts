@@ -91,14 +91,12 @@ export class QuizState {
     @Action(AnswerQuestion)
     answerQuestion({ dispatch, getState, patchState }: StateContext<QuizStateModel>, { payload }: AnswerQuestion) {
         const { givenAnswers, question, questions } = getState();
-
+        patchState({
+            givenAnswers: [...givenAnswers, payload],
+            question: question + 1
+        });
         if (questions.length <= question + 1) {
             return dispatch(new EndGame());
-        } else {
-            patchState({
-                givenAnswers: [...givenAnswers, payload],
-                question: question + 1
-            });
         }
     }
 
