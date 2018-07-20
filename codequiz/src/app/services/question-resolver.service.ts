@@ -16,8 +16,7 @@ export class QuestionResolver implements Resolve<Question[]> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Question[]> {
         // dispatch returns Observable<void> so there won't be any questions in the route data
-        const category: Category = this.store.selectSnapshot(state => state.category);
-        console.log(category);
-        return this.store.dispatch(new FetchQuestions({ name: 'Kotlin' }));
+        const category: Category = this.store.selectSnapshot(state => state.quiz.category);
+        return this.store.dispatch(new FetchQuestions({ name: category.name }));
     }
 }

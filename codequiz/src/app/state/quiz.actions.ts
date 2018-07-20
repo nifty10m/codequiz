@@ -19,6 +19,10 @@ export class EndGame {
     static readonly type = '[Quiz] End game';
 }
 
+export class RestartGame {
+    static readonly type = '[Quiz] Restart game';
+}
+
 export class FetchCategories {
     static readonly type = '[Quiz] Fetch categories';
 }

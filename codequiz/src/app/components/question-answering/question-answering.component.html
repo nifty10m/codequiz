@@ -1,0 +1,7 @@
+<section>
+  <button class="button-outline"
+          *ngFor="let answer of question.answers"
+          (click)="answerQuestion(answer)">
+    {{ answer.answer }}
+  </button>
+</section>

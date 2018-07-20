@@ -1,3 +1,8 @@
-<p>
-  question-layout works!
-</p>
+<main>
+  <cq-question-header [category]="category$ | async"
+                      [numQuestions]="numQuestions$ | async"
+                      [numAnsweredQuestions]="numAnsweredQuestions$ | async">
+  </cq-question-header>
+  <cq-question-text [question]="currentQuestion$ | async"></cq-question-text>
+  <cq-question-answering [question]="currentQuestion$ | async"></cq-question-answering>
+</main>

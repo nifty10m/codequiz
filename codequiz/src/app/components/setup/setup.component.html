@@ -6,7 +6,7 @@
     <select name="category"
             id="category"
             formControlName="categoryCtrl">
-      <option *ngFor="let category of categories$ | async" value="category">{{ category.name }}</option>
+      <option *ngFor="let category of categories$ | async" [value]="category.name">{{ category.name }}</option>
     </select>
     <button type="submit">Let's Go!</button>
   </form>

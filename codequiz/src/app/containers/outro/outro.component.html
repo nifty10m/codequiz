@@ -1,0 +1,8 @@
+<main>
+  <cq-logo></cq-logo>
+  <cq-quiz-result [nickname]="nickname$ | async"
+                  [numAnsweredQuestions]="numAnsweredQuestions$ | async"
+                  [numCorrectAnswers]="numCorrectAnswers$ | async">
+  </cq-quiz-result>
+  <button (click)="restartGame()">I want to try again!</button>
+</main>

@@ -5,7 +5,7 @@ import { Answer } from '../models/answer';
 import { Category } from '../models/category';
 import { Question } from '../models/question';
 import { ApiService } from '../services/api.service';
-import { AnswerQuestion, EndGame, FetchCategories, FetchQuestions, StartGame } from './quiz.actions';
+import { AnswerQuestion, EndGame, FetchCategories, FetchQuestions, RestartGame, StartGame } from './quiz.actions';
 
 interface QuizStateModel {
     nickname: string;
@@ -22,7 +22,7 @@ interface QuizStateModel {
         nickname: null,
         category: null,
         categories: [],
-        question: null,
+        question: 0,
         questions: [],
         givenAnswers: [],
     }
@@ -73,6 +73,16 @@ export class QuizState {
         patchState({
             nickname: payload.nickname,
             category: payload.category,
+            givenAnswers: [],
+            question: 0,
+        });
+        return dispatch(new Navigate(['/quiz']));
+    }
+
+    @Action(RestartGame)
+    restartGame({ dispatch, patchState }: StateContext<QuizStateModel>) {
+        patchState({
+            givenAnswers: [],
             question: 0,
         });
         return dispatch(new Navigate(['/quiz']));
@@ -81,13 +91,20 @@ export class QuizState {
     @Action(AnswerQuestion)
     answerQuestion({ dispatch, getState, patchState }: StateContext<QuizStateModel>, { payload }: AnswerQuestion) {
         const { givenAnswers, question, questions } = getState();
-        patchState({
-            givenAnswers: [...givenAnswers, payload],
-            question: question + 1
-        });
-        if (questions.length - 1 === question + 1) {
+
+        if (questions.length <= question + 1) {
             return dispatch(new EndGame());
+        } else {
+            patchState({
+                givenAnswers: [...givenAnswers, payload],
+                question: question + 1
+            });
         }
+    }
+
+    @Action(EndGame)
+    endGame({ dispatch }: StateContext<QuizStateModel>) {
+        dispatch(new Navigate(['/finish']));
     }
 
 }
